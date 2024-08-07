@@ -1,0 +1,70 @@
+Contract VotingBox(
+    voteTokenId: ByteVec,
+    quorum: U256,
+    votingStart: U256,
+    votingEnd: U256,
+    mut votesYes: U256,
+    mut votesNo: U256
+) extends Constants() {
+
+    mapping[Address, U256] voterToVotesYes
+    mapping[Address, U256] voterToVotesNo
+
+    @using(preapprovedAssets = true, assetsInContract = true, updateFields = true, checkExternalCaller = false)
+    pub fn vote(amount: U256, vote: Bool) -> () {
+        let caller = callerAddress!()
+        assert!(!hasVoted(caller), ErrorCodes.HasAlreadyVoted)
+        assert!(!isVoteOnTime(), ErrorCodes.VoteNotOnTime)
+
+        transferTokenToSelf!(caller, voteTokenId, amount)
+
+        //Proposer should initialize voterToVotesYes and voterToVotesNo
+        if (vote) {
+            voterToVotesYes.insert!(
+                caller,
+                caller,
+                amount
+            )
+            votesYes = votesYes + amount
+        } else {
+            voterToVotesNo.insert!(
+                caller,
+                caller,
+                amount
+            )
+            votesNo = votesNo + amount
+        }
+    }
+
+    @using(assetsInContract = true, updateFields = true, checkExternalCaller = false)
+    pub fn cancelVote() -> () {
+        let caller = callerAddress!()
+        assert!(hasVoted(caller), ErrorCodes.HasNotVoted)
+
+        let mut amount = 0
+        if (voterToVotesYes.contains!(caller)) {
+            amount = voterToVotesYes[caller]
+            voterToVotesYes.remove!(caller, caller)
+            votesYes = votesYes - amount
+        } else {
+            amount = voterToVotesNo[caller]
+            voterToVotesNo.remove!(caller, caller)
+            votesNo = votesNo - amount
+        }
+
+        transferTokenFromSelf!(caller, voteTokenId, amount)
+
+    }
+
+    pub fn hasVoted(voter: Address) -> Bool {
+        return (voterToVotesYes.contains!(voter) || voterToVotesNo.contains!(voter))
+    }
+
+    pub fn isVoteOnTime() -> Bool {
+        return (blockTimeStamp!() > votingStart) && (blockTimeStamp!() < votingEnd)
+    }
+
+    pub fn isProposalAccepted() -> Bool {
+        return (blockTimeStamp!() > votingEnd) && (votesYes > votesNo) && (votesYes + votesNo >= quorum)
+    }
+}

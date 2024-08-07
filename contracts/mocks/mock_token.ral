@@ -1,0 +1,31 @@
+import "std/fungible_token_interface"
+
+Contract MockDAOToken(
+    symbol: ByteVec,
+    name: ByteVec,
+    decimals: U256,
+    totalSupply: U256
+) implements IFungibleToken {
+
+    pub fn getTotalSupply() -> U256 {
+        return totalSupply
+    }
+
+    pub fn getSymbol() -> ByteVec {
+        return symbol
+    }
+
+    pub fn getName() -> ByteVec {
+        return name
+    }
+
+    pub fn getDecimals() -> U256 {
+        return decimals
+    }
+
+    @using(assetsInContract = true, checkExternalCaller = false)
+    pub fn mint(amount: U256) -> () {
+        transferTokenFromSelf!(callerAddress!(), selfTokenId!(), amount)
+    }
+
+}

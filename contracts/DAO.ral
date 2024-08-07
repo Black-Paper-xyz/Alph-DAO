@@ -1,0 +1,39 @@
+Contract DAO(
+    voteTokenId: ByteVec,
+    votingBoxId: ByteVec,
+    quorum: U256,
+    mut proposalCurrentIndex: U256
+) extends DaoConstants() {
+
+    mapping[U256, ByteVec] proposals
+
+    @using(preapprovedAssets = true, updateFields = true, checkExternalCaller = false)
+    pub fn proposeUpgrade(target: ByteVec) -> ByteVec {
+        let caller = callerAddress!()
+        proposals.insert!(caller, proposalCurrentIndex, target)
+        proposalCurrentIndex = proposalCurrentIndex + 1
+
+        let (encodeImmutableFields, encodeMutableFields) = VotingBox.encodeFields!(
+            voteTokenId,
+            quorum,
+            blockTimeStamp!() + 86400, //now + 1 day
+            blockTimeStamp!() + 86400 + 604800, //now + 1 day + 1 week
+            0,
+            0
+        )
+        
+        return copyCreateSubContract!{caller -> ALPH: minimalContractDeposit!()}(
+            toByteVec!(proposalCurrentIndex),
+            votingBoxId,
+            encodeImmutableFields,
+            encodeMutableFields
+        )
+    }
+
+    @using(checkExternalCaller = false)
+    pub fn executeUpgrade(proposalIndex: U256) -> () {
+        let proposalVotingBox = VotingBox(subContractId!(toByteVec!(proposalIndex)))
+        assert!(proposalVotingBox.isProposalAccepted(), ErrorCodes.ProposalNotAccepted)
+        migrate!(proposals[proposalIndex])
+    }
+}

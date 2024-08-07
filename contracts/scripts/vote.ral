@@ -1,0 +1,4 @@
+@using(preapprovedAssets = true)
+TxScript Vote(votingBox: VotingBox, vote: Bool, amount: U256, daoToken: MockDAOToken) {
+    votingBox.vote{callerAddress!() -> ALPH: minimalContractDeposit!() * 2, tokenId!(daoToken): amount}(amount, vote)
+}

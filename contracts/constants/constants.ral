@@ -1,0 +1,13 @@
+Abstract Contract Constants() {
+    enum ErrorCodes {
+        HasAlreadyVoted = 0
+        HasNotVoted = 1
+        VoteNotOnTime = 2
+    }
+}
+
+Abstract Contract DaoConstants() {
+    enum ErrorCodes {
+        ProposalNotAccepted = 0
+    }
+}

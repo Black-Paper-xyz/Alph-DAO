@@ -1,0 +1,68 @@
+{
+  "fullNodeVersion": "v3.5.0",
+  "compilerOptionsUsed": {
+    "ignoreUnusedConstantsWarnings": false,
+    "ignoreUnusedVariablesWarnings": false,
+    "ignoreUnusedFieldsWarnings": false,
+    "ignoreUnusedPrivateFunctionsWarnings": false,
+    "ignoreUpdateFieldsCheckWarnings": false,
+    "ignoreCheckExternalCallerWarnings": false,
+    "ignoreUnusedFunctionReturnWarnings": false
+  },
+  "infos": {
+    "Constants": {
+      "sourceFile": "constants/constants.ral",
+      "sourceCodeHash": "379ff6af3576a0e9b828a63f4c65dd0718764deecdc6658952d9862881a41f38",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": ""
+    },
+    "DAO": {
+      "sourceFile": "DAO.ral",
+      "sourceCodeHash": "f654dbc9c911627c2259bfac764f4ddf0fcd7f9ec97c7cb5bdf24b58d85e9148",
+      "bytecodeDebugPatch": "=6-2+7b=2-2+ab=13-1+f=56+7a7e0214696e73657274206174206d617020706174683a2000=222",
+      "codeHashDebug": "bdf05916616a1f116367275592b19c2e7a182006fedfbf34695a41f1260dd2ce"
+    },
+    "DaoConstants": {
+      "sourceFile": "constants/constants.ral",
+      "sourceCodeHash": "379ff6af3576a0e9b828a63f4c65dd0718764deecdc6658952d9862881a41f38",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": ""
+    },
+    "IFungibleToken": {
+      "sourceFile": "../../../../.npm/_npx/f1b120e1b513c04c/node_modules/@alephium/web3/std/fungible_token_interface.ral",
+      "sourceCodeHash": "62910bf11e1eeb6cb2fd468626ff606a9b06306b2b81590c3b10f6deb5966bde",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": ""
+    },
+    "Mint": {
+      "sourceFile": "scripts/mint.ral",
+      "sourceCodeHash": "63b6c5a4bf186ce017a08a048decc33d22fbe174fd6d343aa3f4a0fda3a28734",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": ""
+    },
+    "MockDAOToken": {
+      "sourceFile": "mocks/mock_token.ral",
+      "sourceCodeHash": "df8e42bf05ce3451f76509f4e4169b8901cb6aedb5f72a3e3f0713c427039af8",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "6ccc38206e7a4c450ecc6822b200dbf45ba10db14444dc4b9df53dd312ac02e0"
+    },
+    "ProposeUpgrade": {
+      "sourceFile": "scripts/proposeUpgrade.ral",
+      "sourceCodeHash": "9d1d7d1def0ea931eb2d80bc819c9b54d5e8daf80cd23f79875f7a5a5d2682f0",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": ""
+    },
+    "Vote": {
+      "sourceFile": "scripts/vote.ral",
+      "sourceCodeHash": "3cd7e313fbfaadb2bf9c8326d295a06067770bb215579895ed986fa232bf7de0",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": ""
+    },
+    "VotingBox": {
+      "sourceFile": "voting_box.ral",
+      "sourceCodeHash": "b38c3ce2e071e30308cbba3dfc25ce75f78245649de5e6e90b44ca34ea8a0bb1",
+      "bytecodeDebugPatch": "=6+9c41=1-1+f=2+a=1-1=2-4+b=1-1=2-2+d4=12-2+33=60-2+11=40+7a7e0214696e73657274206174206d617020706174683a2000=28+1=1-1=40+7a7e0214696e73657274206174206d617020706174683a2000=39-1+7=73-1+a=88+7a7e021472656d6f7665206174206d617020706174683a2000=23-1+9=88+7a7e021472656d6f7665206174206d617020706174683a2000=236",
+      "codeHashDebug": "d411a3ff9147446cb27bb00f28ca9d61489ffcfe4317a7f972347ee6ebe28f63"
+    }
+  }
+}

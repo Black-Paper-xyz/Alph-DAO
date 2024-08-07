@@ -1,0 +1,4 @@
+@using(preapprovedAssets = true)
+TxScript Mint(token: MockDAOToken, amount: U256) {
+    token.mint(amount)
+}

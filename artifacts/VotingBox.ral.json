@@ -1,0 +1,130 @@
+{
+  "version": "v3.5.0",
+  "name": "VotingBox",
+  "bytecode": "0605406a410b413c415141700101020300402fd3cd635ddab4170216020002190c7b0003190e7b1602ce001600ac16014c0f1602d1a2140a5f5f6d61705f5f305f5f16024744b11600d20101a00016002aa1004a0e1602d1a2140a5f5f6d61705f5f315f5f16024744b11600d20101a00116002aa10101020002004043d3b941a876b41700160000020d7b0c1701140a5f5f6d61705f5f305f5f16004744cbc54c180c0d0d140a5f5f6d61705f5f305f5f16004744cb0101170116000d0c140a5f5f6d61705f5f305f5f16004744cb0103a00016012ba1004a170c0d0d140a5f5f6d61705f5f315f5f16004744cb0101170116000d0c140a5f5f6d61705f5f315f5f16004744cb0103a00116012ba1011600ce001601ab01000101010fd388745502140a5f5f6d61705f5f305f5f16004744cbc5140a5f5f6d61705f5f315f5f16004744cbc51b02010000000109d30fbbe34456ce023356ce03311a0201000000010fd3141a6f0356ce0333a000a001331aa000a0012ace01341a02",
+  "codeHash": "7467b2670bae5eb8f7381fd873ce2785a8a8a980e95809e82f4bdb64ef2582b0",
+  "fieldsSig": {
+    "names": [
+      "voteTokenId",
+      "quorum",
+      "votingStart",
+      "votingEnd",
+      "votesYes",
+      "votesNo"
+    ],
+    "types": [
+      "ByteVec",
+      "U256",
+      "U256",
+      "U256",
+      "U256",
+      "U256"
+    ],
+    "isMutable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "eventsSig": [],
+  "functions": [
+    {
+      "name": "vote",
+      "paramNames": [
+        "amount",
+        "vote"
+      ],
+      "paramTypes": [
+        "U256",
+        "Bool"
+      ],
+      "paramIsMutable": [
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "cancelVote",
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": []
+    },
+    {
+      "name": "hasVoted",
+      "paramNames": [
+        "voter"
+      ],
+      "paramTypes": [
+        "Address"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": [
+        "Bool"
+      ]
+    },
+    {
+      "name": "isVoteOnTime",
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": [
+        "Bool"
+      ]
+    },
+    {
+      "name": "isProposalAccepted",
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": [
+        "Bool"
+      ]
+    }
+  ],
+  "constants": [],
+  "enums": [
+    {
+      "name": "ErrorCodes",
+      "fields": [
+        {
+          "name": "HasAlreadyVoted",
+          "value": {
+            "type": "U256",
+            "value": "0"
+          }
+        },
+        {
+          "name": "HasNotVoted",
+          "value": {
+            "type": "U256",
+            "value": "1"
+          }
+        },
+        {
+          "name": "VoteNotOnTime",
+          "value": {
+            "type": "U256",
+            "value": "2"
+          }
+        }
+      ]
+    }
+  ],
+  "mapsSig": {
+    "names": [
+      "voterToVotesYes",
+      "voterToVotesNo"
+    ],
+    "types": [
+      "Map[Address,U256]",
+      "Map[Address,U256]"
+    ]
+  }
+}

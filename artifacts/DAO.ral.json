@@ -1,0 +1,80 @@
+{
+  "version": "v3.5.0",
+  "name": "DAO",
+  "bytecode": "0402406240920103010401402dd339434a06b417011601d1a2140a5f5f6d61705f5f305f5fa0004044b11600d20101a0000d2aa100ce00ce025613800151802a5613800151802a1380093a802a1304640c0c130264170317021601d1a2a00040ce0116021603c102010001020015d3ae4dee1f160040cb17010c0d160101040c7b0c0d0d140a5f5f6d61705f5f305f5f16004044cb0101ba",
+  "codeHash": "135684dd75aeac49c332d4b035a0e1fc0e3f33d2a1ea0b4b531d723cc07db4f3",
+  "fieldsSig": {
+    "names": [
+      "voteTokenId",
+      "votingBoxId",
+      "quorum",
+      "proposalCurrentIndex"
+    ],
+    "types": [
+      "ByteVec",
+      "ByteVec",
+      "U256",
+      "U256"
+    ],
+    "isMutable": [
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "eventsSig": [],
+  "functions": [
+    {
+      "name": "proposeUpgrade",
+      "paramNames": [
+        "target"
+      ],
+      "paramTypes": [
+        "ByteVec"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": [
+        "ByteVec"
+      ]
+    },
+    {
+      "name": "executeUpgrade",
+      "paramNames": [
+        "proposalIndex"
+      ],
+      "paramTypes": [
+        "U256"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    }
+  ],
+  "constants": [],
+  "enums": [
+    {
+      "name": "ErrorCodes",
+      "fields": [
+        {
+          "name": "ProposalNotAccepted",
+          "value": {
+            "type": "U256",
+            "value": "0"
+          }
+        }
+      ]
+    }
+  ],
+  "mapsSig": {
+    "names": [
+      "proposals"
+    ],
+    "types": [
+      "Map[U256,ByteVec]"
+    ]
+  }
+}

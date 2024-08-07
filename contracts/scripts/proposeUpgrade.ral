@@ -1,0 +1,3 @@
+TxScript ProposeUpgrade(dao: DAO, target: ByteVec) {
+    let _ = dao.proposeUpgrade{callerAddress!() -> ALPH: minimalContractDeposit!() * 2}(target)
+}

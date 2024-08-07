@@ -1,0 +1,28 @@
+{
+  "version": "v3.5.0",
+  "name": "ProposeUpgrade",
+  "bytecodeTemplate": "0101030000000bb4d10e2ca2{1}0d0d{0}010018",
+  "fieldsSig": {
+    "names": [
+      "dao",
+      "target"
+    ],
+    "types": [
+      "DAO",
+      "ByteVec"
+    ],
+    "isMutable": [
+      false,
+      false
+    ]
+  },
+  "functions": [
+    {
+      "name": "main",
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": []
+    }
+  ]
+}
