@@ -1,4 +1,4 @@
-import { web3, AssetOutput, DUST_AMOUNT, ONE_ALPH, stringToHex, addressFromContractId, MINIMAL_CONTRACT_DEPOSIT, ALPH_TOKEN_ID, subContractId, tokenIdFromAddress, Contract } from '@alephium/web3'
+import { web3, AssetOutput, DUST_AMOUNT, ONE_ALPH, stringToHex, addressFromContractId, MINIMAL_CONTRACT_DEPOSIT, ALPH_TOKEN_ID, subContractId, tokenIdFromAddress, Contract, node, NodeProvider } from '@alephium/web3'
 import { expectAssertionError, testAddress, getSigners, randomContractId } from '@alephium/web3-test'
 import { 
     MockDAOToken, 
@@ -7,12 +7,12 @@ import {
     Mint,
     ProposeUpgrade,
     Vote,
-    VotingBoxInstance
+    VotingBoxInstance,
+    CancelVote,
+    DAOInstance
 } from '../artifacts/ts'
 import { AddressToByteVec, contract } from '@alephium/web3/dist/src/codec'
 import { balanceOf } from './utils'
-import assert from 'assert'
-
 
 describe('unit tests', () => {
   let DAOInstanceId
@@ -145,7 +145,252 @@ describe('unit tests', () => {
      expect(has1Voted).toBeTruthy()    
 
      const proposalAccepted = (await VotingBoxInstanceVar.view.isProposalAccepted()).returns
-     expect(proposalAccepted).toEqual(true)
+     expect(proposalAccepted).toBeFalsy()
+
+     const fields = (await VotingBoxInstanceVar.fetchState()).fields
+     const proposalAccepted2 = (await VotingBox.tests.isProposalAccepted({
+      initialFields: {
+        voteTokenId: fields.voteTokenId,
+        quorum: fields.quorum,
+        votingStart: fields.votingStart,
+        votingEnd: fields.votingEnd,
+        votesYes: fields.votesYes,
+        votesNo: fields.votesNo
+      },
+      address: VotingBoxInstanceVar.address, 
+      blockTimeStamp: Number(fields.votingStart + 86500n),
+    })).returns
+
+    //Debug
+    //console.log('quorum: ', fields.quorum)
+    //console.log('votingStart: ', fields.votingStart)
+    //console.log('votingEnd: ', fields.votingEnd)
+    //console.log('votesYes: ', fields.votesYes)
+    //console.log('votesNo: ', fields.votesNo)
+
+    expect(proposalAccepted2).toBeFalsy()
+
+    const proposalAccepted3 = (await VotingBox.tests.isProposalAccepted({
+      initialFields: {
+        voteTokenId: fields.voteTokenId,
+        quorum: fields.quorum,
+        votingStart: fields.votingStart,
+        votingEnd: fields.votingEnd,
+        votesYes: fields.votesYes,
+        votesNo: fields.votesNo
+      },
+      address: VotingBoxInstanceVar.address, 
+      blockTimeStamp: Number(fields.votingEnd + 1n),
+    })).returns
+
+    //Debug
+    //console.log('quorum: ', fields.quorum)
+    //console.log('votingStart: ', fields.votingStart)
+    //console.log('votingEnd: ', fields.votingEnd)
+    //console.log('votesYes: ', fields.votesYes)
+    //console.log('votesNo: ', fields.votesNo)
+
+    expect(proposalAccepted3).toBeTruthy()
+  })
+
+  test('Propose a new upgrade, quorum not reached, and cancel votes', async () => {
+    await ProposeUpgrade.execute(signers[0], {
+      initialFields: {
+          dao: DAOInstanceId,
+          target: randomContractId()},
+      attoAlphAmount: MINIMAL_CONTRACT_DEPOSIT * 2n,
+    })
+
+    let votingBoxId = subContractId(DAOInstanceId, '1', 0)
+    const VotingBoxInstanceVar = new VotingBoxInstance(addressFromContractId(votingBoxId))
+
+    await Vote.execute(signers[0], {
+        initialFields: {
+            votingBox: votingBoxId,
+            vote: true,
+            amount: 10n,
+            daoToken: MockDAOTokenInstanceVar.contractId
+        },
+        attoAlphAmount: MINIMAL_CONTRACT_DEPOSIT * 2n,
+        tokens: [{id: MockDAOTokenInstanceVar.contractId, amount: 10n}]
+    })
+
+    await Vote.execute(signers[1], {
+      initialFields: {
+          votingBox: votingBoxId,
+          vote: false,
+          amount: 10n,
+          daoToken: MockDAOTokenInstanceVar.contractId
+      },
+      attoAlphAmount: MINIMAL_CONTRACT_DEPOSIT * 2n,
+      tokens: [{id: MockDAOTokenInstanceVar.contractId, amount: 10n}]
+    })
+
+    await Vote.execute(signers[2], {
+      initialFields: {
+          votingBox: votingBoxId,
+          vote: false,
+          amount: 5n,
+          daoToken: MockDAOTokenInstanceVar.contractId
+      },
+      attoAlphAmount: MINIMAL_CONTRACT_DEPOSIT * 2n,
+      tokens: [{id: MockDAOTokenInstanceVar.contractId, amount: 5n}]
+    })
+
+    await Vote.execute(signers[3], {
+      initialFields: {
+          votingBox: votingBoxId,
+          vote: false,
+          amount: 7n,
+          daoToken: MockDAOTokenInstanceVar.contractId
+      },
+      attoAlphAmount: MINIMAL_CONTRACT_DEPOSIT * 2n,
+      tokens: [{id: MockDAOTokenInstanceVar.contractId, amount: 7n}]
+    })
+
+    await Vote.execute(signers[4], {
+      initialFields: {
+          votingBox: votingBoxId,
+          vote: true,
+          amount: 1n,
+          daoToken: MockDAOTokenInstanceVar.contractId
+      },
+      attoAlphAmount: MINIMAL_CONTRACT_DEPOSIT * 2n,
+      tokens: [{id: MockDAOTokenInstanceVar.contractId, amount: 1n}]
+    })
+
+    const fields = (await VotingBoxInstanceVar.fetchState()).fields
+
+    const proposalAccepted = (await VotingBox.tests.isProposalAccepted({
+      initialFields: {
+        voteTokenId: fields.voteTokenId,
+        quorum: fields.quorum,
+        votingStart: fields.votingStart,
+        votingEnd: fields.votingEnd,
+        votesYes: fields.votesYes,
+        votesNo: fields.votesNo
+      },
+      address: VotingBoxInstanceVar.address, 
+      blockTimeStamp: Number(fields.votingEnd + 86500n),
+    })).returns
+
+    //Debug
+    //console.log('quorum: ', fields.quorum)
+    //console.log('votingStart: ', fields.votingStart)
+    //console.log('votingEnd: ', fields.votingEnd)
+    //console.log('votesYes: ', fields.votesYes)
+    //console.log('votesNo: ', fields.votesNo)
+
+    expect(proposalAccepted).toBeFalsy()
+
+    //1st user cancel
+    let balanceBefore = await balanceOf(MockDAOTokenInstanceVar.contractId, signers[0].address)
+    const fieldsBefore = (await VotingBoxInstanceVar.fetchState()).fields
+
+    await CancelVote.execute(signers[0], {
+      initialFields: {
+          votingBox: votingBoxId,
+      },
+      attoAlphAmount: MINIMAL_CONTRACT_DEPOSIT,
+    })
+
+    let balanceAfter = await balanceOf(MockDAOTokenInstanceVar.contractId, signers[0].address)
+    let balanceDifference = balanceAfter - balanceBefore
+
+    const fieldsAfter = (await VotingBoxInstanceVar.fetchState()).fields
+
+    expect(balanceAfter).toEqual(10n)
+    expect(fieldsAfter.votesYes).toEqual(fieldsBefore.votesYes - balanceDifference)
+    expect(fieldsAfter.votesYes).toBeLessThan(fieldsBefore.votesYes)
+
+  
+    //2nd user cancel
+    let balanceBefore2 = await balanceOf(MockDAOTokenInstanceVar.contractId, signers[1].address)
+    const fieldsBefore2 = (await VotingBoxInstanceVar.fetchState()).fields
+
+    await CancelVote.execute(signers[1], {
+      initialFields: {
+          votingBox: votingBoxId,
+      },
+      attoAlphAmount: MINIMAL_CONTRACT_DEPOSIT,
+    })
+
+    let balanceAfter2 = await balanceOf(MockDAOTokenInstanceVar.contractId, signers[1].address)
+    let balanceDifference2 = balanceAfter2 - balanceBefore2
+
+    const fieldsAfter2 = (await VotingBoxInstanceVar.fetchState()).fields
+
+    expect(balanceAfter2).toEqual(10n)
+    expect(fieldsAfter2.votesNo).toEqual(fieldsBefore2.votesNo - balanceDifference2)
+    expect(fieldsAfter2.votesNo).toBeLessThan(fieldsBefore2.votesNo)
+
+    //3rd user cancel
+    let balanceBefore3 = await balanceOf(MockDAOTokenInstanceVar.contractId, signers[2].address)
+    const fieldsBefore3 = (await VotingBoxInstanceVar.fetchState()).fields
+  
+    await CancelVote.execute(signers[2], {
+      initialFields: {
+          votingBox: votingBoxId,
+      },
+      attoAlphAmount: MINIMAL_CONTRACT_DEPOSIT,
+    })
+  
+    let balanceAfter3 = await balanceOf(MockDAOTokenInstanceVar.contractId, signers[2].address)
+    let balanceDifference3 = balanceAfter3 - balanceBefore3
+  
+    const fieldsAfter3 = (await VotingBoxInstanceVar.fetchState()).fields
+  
+    expect(balanceAfter3).toEqual(10n)
+    expect(fieldsAfter3.votesNo).toEqual(fieldsBefore3.votesNo - balanceDifference3)
+    expect(fieldsAfter3.votesNo).toBeLessThan(fieldsBefore3.votesNo)
+
+
+    //4th user cancel
+    let balanceBefore4 = await balanceOf(MockDAOTokenInstanceVar.contractId, signers[3].address)
+    const fieldsBefore4 = (await VotingBoxInstanceVar.fetchState()).fields
+  
+    await CancelVote.execute(signers[3], {
+      initialFields: {
+          votingBox: votingBoxId,
+      },
+      attoAlphAmount: MINIMAL_CONTRACT_DEPOSIT,
+    })
+  
+    let balanceAfter4 = await balanceOf(MockDAOTokenInstanceVar.contractId, signers[3].address)
+    let balanceDifference4 = balanceAfter4 - balanceBefore4
+  
+    const fieldsAfter4 = (await VotingBoxInstanceVar.fetchState()).fields
+  
+    expect(balanceAfter4).toEqual(10n)
+    expect(fieldsAfter4.votesNo).toEqual(fieldsBefore4.votesNo - balanceDifference4)
+    expect(fieldsAfter4.votesNo).toBeLessThan(fieldsBefore4.votesNo)
+
+    //5th user cancel
+    let balanceBefore5 = await balanceOf(MockDAOTokenInstanceVar.contractId, signers[4].address)
+    const fieldsBefore5 = (await VotingBoxInstanceVar.fetchState()).fields
+
+    await CancelVote.execute(signers[4], {
+      initialFields: {
+          votingBox: votingBoxId,
+      },
+      attoAlphAmount: MINIMAL_CONTRACT_DEPOSIT,
+    })
+
+    let balanceAfter5 = await balanceOf(MockDAOTokenInstanceVar.contractId, signers[0].address)
+    let balanceDifference5 = balanceAfter5 - balanceBefore5
+
+    const fieldsAfter5 = (await VotingBoxInstanceVar.fetchState()).fields
+
+    expect(balanceAfter5).toEqual(10n)
+    expect(fieldsAfter5.votesYes).toEqual(fieldsBefore5.votesYes - balanceDifference5)
+    expect(fieldsAfter5.votesYes).toBeLessThan(fieldsBefore5.votesYes)
+
+
+    //Final check
+    const fieldsFinal = (await VotingBoxInstanceVar.fetchState()).fields
+    expect(fieldsFinal.votesYes).toEqual(0n)
+    expect(fieldsFinal.votesNo).toEqual(0n)
+
   })
 
 })

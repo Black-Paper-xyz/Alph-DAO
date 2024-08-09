@@ -1,0 +1,3 @@
+TxScript CancelVote(votingBox: VotingBox) {
+    votingBox.cancelVote()
+}

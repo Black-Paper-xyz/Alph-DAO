@@ -12,9 +12,15 @@ import {
   HexString,
 } from "@alephium/web3";
 import { getContractByCodeHash } from "./contracts";
+import { default as CancelVoteScriptJson } from "../scripts/CancelVote.ral.json";
 import { default as MintScriptJson } from "../scripts/Mint.ral.json";
 import { default as ProposeUpgradeScriptJson } from "../scripts/ProposeUpgrade.ral.json";
 import { default as VoteScriptJson } from "../scripts/Vote.ral.json";
+
+export const CancelVote = new ExecutableScript<{ votingBox: HexString }>(
+  Script.fromJson(CancelVoteScriptJson, "", []),
+  getContractByCodeHash
+);
 
 export const Mint = new ExecutableScript<{ token: HexString; amount: bigint }>(
   Script.fromJson(MintScriptJson, "", []),

@@ -135,8 +135,8 @@ class Factory extends ContractFactory<DAOInstance, DAOTypes.Fields> {
 export const DAO = new Factory(
   Contract.fromJson(
     DAOContractJson,
-    "=6-2+7b=2-2+ab=13-1+f=56+7a7e0214696e73657274206174206d617020706174683a2000=222",
-    "bdf05916616a1f116367275592b19c2e7a182006fedfbf34695a41f1260dd2ce",
+    "=6-2+7b=2-2+ab=13-1+f=68+7a7e0214696e73657274206174206d617020706174683a2000=210",
+    "1c8bd58ac6c5bac71a9deb02583eb095cb439445421b4e2e59e8bacf33d40de3",
     []
   )
 );

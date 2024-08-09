@@ -10,6 +10,12 @@
     "ignoreUnusedFunctionReturnWarnings": false
   },
   "infos": {
+    "CancelVote": {
+      "sourceFile": "scripts/cancelVote.ral",
+      "sourceCodeHash": "c5f44a89f78ad0dce2e324845ad9ba6b76960fc37824e8d3c2d7938ff983b752",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": ""
+    },
     "Constants": {
       "sourceFile": "constants/constants.ral",
       "sourceCodeHash": "379ff6af3576a0e9b828a63f4c65dd0718764deecdc6658952d9862881a41f38",
@@ -18,9 +24,9 @@
     },
     "DAO": {
       "sourceFile": "DAO.ral",
-      "sourceCodeHash": "f654dbc9c911627c2259bfac764f4ddf0fcd7f9ec97c7cb5bdf24b58d85e9148",
-      "bytecodeDebugPatch": "=6-2+7b=2-2+ab=13-1+f=56+7a7e0214696e73657274206174206d617020706174683a2000=222",
-      "codeHashDebug": "bdf05916616a1f116367275592b19c2e7a182006fedfbf34695a41f1260dd2ce"
+      "sourceCodeHash": "56fa53e359ff7a06adee3e1af11d8b6df3c4bdbae041840c3ce213eff8ba834a",
+      "bytecodeDebugPatch": "=6-2+7b=2-2+ab=13-1+f=68+7a7e0214696e73657274206174206d617020706174683a2000=210",
+      "codeHashDebug": "1c8bd58ac6c5bac71a9deb02583eb095cb439445421b4e2e59e8bacf33d40de3"
     },
     "DaoConstants": {
       "sourceFile": "constants/constants.ral",

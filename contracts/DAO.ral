@@ -10,8 +10,8 @@ Contract DAO(
     @using(preapprovedAssets = true, updateFields = true, checkExternalCaller = false)
     pub fn proposeUpgrade(target: ByteVec) -> ByteVec {
         let caller = callerAddress!()
-        proposals.insert!(caller, proposalCurrentIndex, target)
         proposalCurrentIndex = proposalCurrentIndex + 1
+        proposals.insert!(caller, proposalCurrentIndex, target)
 
         let (encodeImmutableFields, encodeMutableFields) = VotingBox.encodeFields!(
             voteTokenId,
